@@ -60,7 +60,7 @@ def scan_host(domain: str, port: int, use_ssl: bool = False, no_verify: bool = F
                 except Exception:
                     return _retry(use_ssl=True, no_verify=True)
                 
-        print(f"Connected to {Colors.BLUE}{domain}:{port}{Colors.RESET}")
+        #print(f"Connected to {Colors.BLUE}{domain}:{port}{Colors.RESET}")
 
         request_data = f"GET / HTTP/1.1\r\n"
 
@@ -90,19 +90,8 @@ def scan_host(domain: str, port: int, use_ssl: bool = False, no_verify: bool = F
 
             if response_headers.endswith(b"\r\n\r\n"):
                 break
-        
-        response_display = ""
-        max_console_column = 50
-        cols = 0
-        for v in str(response_headers):
-            response_display += v
 
-            cols += 1
-            if cols == max_console_column:
-                cols = 0
-                response_display += "\n"
-
-        print(f"Response from {Colors.BLUE}{domain}:{port}{Colors.RESET} SSL: {Colors.BLUE}{use_ssl}{Colors.RESET} SSL.CERT_NONE: {Colors.BLUE}{no_verify}{Colors.RESET}\n{response_display}")
+        print(f"{Colors.BLUE}{'https' if use_ssl else 'http'}://{domain}:{port}{Colors.RESET} -> {response_headers.decode().splitlines()[0].split(" ", 1)[1]}")
 
     except Exception as e:
         return _retry()
